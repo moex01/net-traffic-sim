@@ -1,0 +1,47 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Tooling caches
+.cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# OS/editor artifacts
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Local outputs
+temp_pcaps*/
+temp_pcaps_*/
+*.pcap
+*.pcapng
+*.pcapng.*
+*.gz

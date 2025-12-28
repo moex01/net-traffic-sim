@@ -1,0 +1,93 @@
+# VoIP Network Simulation Configuration
+# Simulates SIP/RTP call traffic, VoIP infrastructure, and unified communications
+
+# VoIP Infrastructure
+DOMAIN_CONTROLLER_IP: "10.5.10.10"  # Active Directory for auth
+SIP_PROXY_IP: "10.5.11.10"  # SIP Proxy/Registrar
+SIP_SERVER_IP: "10.5.11.11"  # SIP Application Server
+MEDIA_GATEWAY_IP: "10.5.11.20"  # RTP Media Gateway
+VOICEMAIL_SERVER_IP: "10.5.11.30"  # Voicemail/Unified Messaging
+
+# VoIP Phones/Endpoints
+WORKSTATION_HOSTS:
+  VOIP-PHONE-01: "10.5.20.101"
+  VOIP-PHONE-02: "10.5.20.102"
+  VOIP-PHONE-03: "10.5.20.103"
+  VOIP-PHONE-04: "10.5.20.104"
+  VOIP-PHONE-05: "10.5.20.105"
+  VOIP-PHONE-06: "10.5.20.106"
+  VOIP-PHONE-07: "10.5.20.107"
+  VOIP-PHONE-08: "10.5.20.108"
+  VOIP-PHONE-09: "10.5.20.109"
+  VOIP-PHONE-10: "10.5.20.110"
+  SOFTPHONE-01: "10.5.20.201"  # Desktop softphone
+  SOFTPHONE-02: "10.5.20.202"
+  SOFTPHONE-03: "10.5.20.203"
+
+WORKSTATION_IPS:
+  - "10.5.20.101"
+  - "10.5.20.102"
+  - "10.5.20.103"
+  - "10.5.20.104"
+  - "10.5.20.105"
+  - "10.5.20.106"
+  - "10.5.20.107"
+  - "10.5.20.108"
+  - "10.5.20.109"
+  - "10.5.20.110"
+  - "10.5.20.201"
+  - "10.5.20.202"
+  - "10.5.20.203"
+
+# Admin Workstations (VoIP management)
+ADMIN_WORKSTATION_HOSTS:
+  VOIP-ADMIN-01: "10.5.30.15"
+
+ADMIN_WORKSTATION_IPS:
+  - "10.5.30.15"
+
+# VoIP Traffic Rates
+SIP_CALLS_PER_HOUR: 50  # Call setup/teardown signaling
+RTP_SESSIONS_PER_HOUR: 50  # Active voice calls
+DNS_QUERIES_PER_SEC: 10  # SRV record lookups for SIP
+DHCP_LEASES_PER_HOUR: 2  # Phone DHCP renewals
+NTP_QUERIES_PER_HOUR: 20  # Time sync for phones
+SNMP_POLLS_PER_HOUR: 30  # Phone monitoring
+SYSLOG_MESSAGES_PER_HOUR: 80  # Call quality logs
+
+# Supporting Services
+HTTP_REQUESTS_PER_SEC: 5  # Phone provisioning/config
+SMTP_MESSAGES_PER_HOUR: 10  # Voicemail notifications
+IMAP_SESSIONS_PER_HOUR: 5  # Unified messaging
+
+# Default Capture Settings
+DEFAULT_CAPTURE_DURATION_MINUTES: 480  # 8 hour call center shift
+DEFAULT_CAPTURE_DURATION_SECONDS: 28800
+
+# External DNS Servers
+EXTERNAL_DNS_IPS:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+# External SIP Trunking Providers
+EXTERNAL_DOMAINS:
+  - "sip.voip-provider.com"
+  - "trunk1.sip-carrier.net"
+  - "trunk2.sip-carrier.net"
+  - "voip.pstn-gateway.com"
+
+# Business Hours (Call center hours)
+BUSINESS_HOUR_START: 9
+BUSINESS_HOUR_END: 17
+BUSINESS_HOUR_TRAFFIC_MULTIPLIER: 5.0  # High call volume during business hours
+OFF_HOUR_TRAFFIC_MULTIPLIER: 0.1  # Minimal after-hours calls
+
+# Ephemeral Port Range (RTP typically uses high ports)
+EPHEMERAL_PORT_RANGE:
+  - 49152
+  - 65535
+
+# RTP Port Range (Media streams)
+RTP_PORT_RANGE:
+  - 16384
+  - 32767

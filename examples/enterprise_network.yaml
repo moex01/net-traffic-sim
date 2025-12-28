@@ -1,0 +1,89 @@
+# Enterprise Network Simulation Configuration
+# Simulates a typical corporate network with workstations, servers, and business applications
+
+# Network Topology
+DOMAIN_CONTROLLER_IP: "10.3.10.10"
+FILE_SERVER_IP: "10.3.10.20"
+MAIL_SERVER_IP: "10.3.10.30"
+SQL_SERVER_IP: "10.3.10.40"
+WEB_SERVER_IP: "10.3.10.50"
+
+# Workstation Hosts
+WORKSTATION_HOSTS:
+  WS-01: "10.3.20.10"
+  WS-02: "10.3.20.11"
+  WS-03: "10.3.20.12"
+  WS-04: "10.3.20.13"
+  WS-05: "10.3.20.14"
+  WS-06: "10.3.20.15"
+  WS-07: "10.3.20.16"
+  WS-08: "10.3.20.17"
+  WS-09: "10.3.20.18"
+  WS-10: "10.3.20.19"
+
+WORKSTATION_IPS:
+  - "10.3.20.10"
+  - "10.3.20.11"
+  - "10.3.20.12"
+  - "10.3.20.13"
+  - "10.3.20.14"
+  - "10.3.20.15"
+  - "10.3.20.16"
+  - "10.3.20.17"
+  - "10.3.20.18"
+  - "10.3.20.19"
+
+# Admin Workstations
+ADMIN_WORKSTATION_HOSTS:
+  IT-ADMIN-01: "10.3.30.15"
+  IT-ADMIN-02: "10.3.30.16"
+
+ADMIN_WORKSTATION_IPS:
+  - "10.3.30.15"
+  - "10.3.30.16"
+
+# Traffic Generation Rates (per second/hour)
+DNS_QUERIES_PER_SEC: 20
+HTTP_REQUESTS_PER_SEC: 10
+SMTP_MESSAGES_PER_HOUR: 30
+IMAP_SESSIONS_PER_HOUR: 15
+SQL_QUERIES_PER_HOUR: 50
+SMB_TRANSFERS_PER_HOUR: 8
+RDP_SESSIONS_PER_HOUR: 5
+DHCP_LEASES_PER_HOUR: 4
+NTP_QUERIES_PER_HOUR: 12
+SNMP_POLLS_PER_HOUR: 60
+SYSLOG_MESSAGES_PER_HOUR: 100
+
+# Default Capture Settings
+DEFAULT_CAPTURE_DURATION_MINUTES: 1440  # 24 hours
+DEFAULT_CAPTURE_DURATION_SECONDS: 86400
+
+# External Resources
+EXTERNAL_DNS_IPS:
+  - "8.8.8.8"
+  - "8.8.4.4"
+  - "1.1.1.1"
+
+EXTERNAL_DOMAINS:
+  - "office365.microsoft.com"
+  - "login.microsoftonline.com"
+  - "outlook.office365.com"
+  - "onedrive.live.com"
+  - "api.office.com"
+  - "graph.microsoft.com"
+  - "salesforce.com"
+  - "slack.com"
+  - "zoom.us"
+  - "webex.com"
+
+# Business Hour Multipliers
+BUSINESS_HOUR_START: 8
+BUSINESS_HOUR_END: 18
+BUSINESS_HOUR_TRAFFIC_MULTIPLIER: 3.0
+OFF_HOUR_TRAFFIC_MULTIPLIER: 0.3
+
+# Ephemeral Port Range
+EPHEMERAL_PORT_RANGE:
+  - 49152
+  - 65535

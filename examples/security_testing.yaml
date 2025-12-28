@@ -1,0 +1,78 @@
+# Security Testing / Penetration Test Scenario Configuration
+# Simulates network reconnaissance, scanning, and attack patterns for detection testing
+
+# Target Network
+DOMAIN_CONTROLLER_IP: "10.0.10.10"
+FILE_SERVER_IP: "10.0.10.20"
+MAIL_SERVER_IP: "10.0.10.30"
+SQL_SERVER_IP: "10.0.10.40"
+WEB_SERVER_IP: "10.0.10.50"
+
+# Target Workstations
+WORKSTATION_HOSTS:
+  TARGET-WS-01: "10.0.20.10"
+  TARGET-WS-02: "10.0.20.11"
+  TARGET-WS-03: "10.0.20.12"
+  TARGET-WS-04: "10.0.20.13"
+
+WORKSTATION_IPS:
+  - "10.0.20.10"
+  - "10.0.20.11"
+  - "10.0.20.12"
+  - "10.0.20.13"
+
+# Attacker Infrastructure
+ATTACKER_PUBLIC_IP: "203.0.113.100"
+ATTACKER_PUBLIC_IPS:
+  - "203.0.113.100"
+  - "203.0.113.101"
+  - "203.0.113.102"
+  - "203.0.113.103"
+
+# Pentesting Workstation (Internal)
+ADMIN_WORKSTATION_HOSTS:
+  PENTEST-01: "10.0.30.100"
+
+ADMIN_WORKSTATION_IPS:
+  - "10.0.30.100"
+
+# Scanner Traffic Rates (simulating reconnaissance activity)
+# Higher rates than normal to simulate active scanning
+DNS_QUERIES_PER_SEC: 50  # DNS enumeration
+HTTP_REQUESTS_PER_SEC: 30  # Web application probing
+SMB_TRANSFERS_PER_HOUR: 20  # File share enumeration
+RDP_SESSIONS_PER_HOUR: 15  # RDP brute force attempts
+SQL_QUERIES_PER_HOUR: 25  # SQL injection attempts
+SNMP_POLLS_PER_HOUR: 100  # SNMP community string enumeration
+
+# Scanner Configuration
+SCANNER_REQUESTS_PER_HOUR: 500  # Port scans and service probes
+TARGETED_SCANNER_REQUESTS_PER_HOUR: 200  # Focused scans
+
+# Default Capture Settings
+DEFAULT_CAPTURE_DURATION_MINUTES: 120  # 2 hour pentest window
+DEFAULT_CAPTURE_DURATION_SECONDS: 7200
+
+# External DNS Servers
+EXTERNAL_DNS_IPS:
+  - "8.8.8.8"
+  - "1.1.1.1"
+
+# Suspicious Domains (C2, phishing, malware)
+EXTERNAL_DOMAINS:
+  - "malicious-payload-server.com"
+  - "attacker-command-control.net"
+  - "phishing-domain.xyz"
+  - "exploit-kit-landing.ru"
+  - "ransomware-c2.onion.to"
+
+# Time Configuration (Simulate after-hours attack)
+BUSINESS_HOUR_START: 0
+BUSINESS_HOUR_END: 6
+BUSINESS_HOUR_TRAFFIC_MULTIPLIER: 1.5  # Attack activity
+OFF_HOUR_TRAFFIC_MULTIPLIER: 0.5  # Minimal legitimate traffic
+
+# Ephemeral Port Range
+EPHEMERAL_PORT_RANGE:
+  - 49152
+  - 65535

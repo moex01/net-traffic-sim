@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+ [project]
+ name = "net-traffic-sim"
+ version = "0.1.0"
+ description = "Generate realistic corporate network PCAP traffic using Scapy (Portal/SQL/SMB/Auth/Scanners)."
+ readme = "README.md"
+ requires-python = ">=3.10"
+ license = { file = "LICENSE" }
+ authors = [{ name = "moex0" }]
+ dependencies = [
+   "scapy>=2.5.0,<3.0.0",
+ ]
+keywords = ["pcap", "scapy", "network-traffic", "ctf", "simulation"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/moex01/net-traffic-sim"
+Source = "https://github.com/moex01/net-traffic-sim"
+Issues = "https://github.com/moex01/net-traffic-sim/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+[project.scripts]
+net-traffic-sim = "net_traffic_sim.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+]
+ignore = ["E501"] # Ignore line-length errors as they are too many and mostly in strings
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-q --tb=short"
+filterwarnings = [
+    "ignore::DeprecationWarning:scapy.*:",
+]
