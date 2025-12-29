@@ -2,7 +2,7 @@
 
 net-traffic-sim generates synthetic large multi-day corporate network traffic PCAPs in few minutes. The traffic is designed to look realistic for training, detection testing, and CTF-style exercises.
 
-It currently ships **33 protocol generators** (see `src/net_traffic_sim/protocols/__init__.py` `PROTOCOL_REGISTRY`).
+It currently ships **34 protocol generators** including enterprise authentication (RADIUS) (see `src/net_traffic_sim/protocols/__init__.py` `PROTOCOL_REGISTRY`).
 
 ## Protocol Categories
 
@@ -13,7 +13,7 @@ Protocols are organized into the following categories:
 | **Core Network** | ARP, ICMP, DHCP, DHCPv6, IPv6 ND, NTP | 6 |
 | **Name Resolution & Discovery** | DNS (UDP), DNS_TCP, LLMNR, NBNS, mDNS, SSDP | 6 |
 | **Web & API** | HTTP, HTTPS, QUIC, Software_Downloads | 4 |
-| **Authentication & Directory** | Auth (Kerberos/LDAP), LDAPS | 2 |
+| **Authentication & Directory** | Auth (Kerberos/LDAP), LDAPS, RADIUS | 3 |
 | **Email** | SMTP, IMAP, POP3 | 3 |
 | **Database** | SQL | 1 |
 | **File Sharing** | SMB, FTP | 2 |
@@ -22,7 +22,17 @@ Protocols are organized into the following categories:
 | **Monitoring & Logging** | SNMP, SYSLOG | 2 |
 | **Security Testing** | Scanners, Targeted_Scanner | 2 |
 
-**Total: 33 protocols**
+**Total: 34 protocols**
+
+### Recent Additions
+
+**RADIUS Protocol (Enterprise Authentication):**
+- WiFi WPA2-Enterprise authentication flows
+- VPN remote access authentication
+- Multi-factor authentication (MFA) support
+- Accounting (start/stop/interim-update)
+- Challenge-Response authentication
+- Access-Accept/Access-Reject flows
 
 Key design points:
 - Time-aware traffic patterns that reflect business-hour behavior.
@@ -81,7 +91,7 @@ python -m pip install -e .
 - `--no-merge` - Skip automatic mergecap operation
 - `--keep-temps` - Keep individual protocol PCAP files after merging
 
-**Note:** The simulator generates traffic for **all 33 protocols simultaneously** to create realistic corporate network traffic patterns. Protocol selection is not supported as the design goal is comprehensive network simulation.
+**Note:** The simulator generates traffic for **all 34 protocols simultaneously** to create realistic corporate network traffic patterns. Protocol selection is not supported as the design goal is comprehensive network simulation.
 
 **Examples:**
 ```bash
@@ -247,11 +257,17 @@ pytest -n 4
 pytest
 ```
 
-**Performance Benchmarks (148 tests):**
-- Sequential execution: 125.51s
-- 2 workers: 65.04s (1.9x speedup)
-- 4 workers: 43.82s (2.9x speedup)
-- Auto (12 workers): 35.28s (3.6x speedup)
+**Performance Benchmarks (172 tests):**
+- Sequential execution: ~140s
+- 2 workers: ~72s (1.9x speedup)
+- 4 workers: ~48s (2.9x speedup)
+- Auto (12 workers): ~40s (3.5x speedup)
+
+**Test Coverage:**
+- 172 comprehensive tests covering all 34 protocols
+- RADIUS: 24 dedicated tests for enterprise authentication flows
+- Core protocols: 148 tests for baseline network traffic
+- All tests passing with parallel execution support
 
 ## Docs
 Read [ARCHITECTURE.md](ARCHITECTURE.md) to understand the project structure, how the orchestrator auto-configures, why traffic is generated per protocol, how `FastPacketSerializer` buffers writes, and how parallel workers coordinate.
