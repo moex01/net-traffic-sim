@@ -32,6 +32,7 @@ from .misc import (
     generate_syslog_traffic,
     generate_winrm_traffic,
 )
+from .radius import generate_radius_traffic
 from .rdp import generate_rdp_traffic
 from .scanners import (
     generate_public_scanner_traffic,
@@ -74,6 +75,7 @@ PROTOCOL_REGISTRY = {
     "QUIC": generate_quic_traffic,
     "VOIP": generate_sip_rtp_traffic,
     "IPV6_ND": generate_ipv6_nd_traffic,
+    "RADIUS": generate_radius_traffic,
 }
 
 __all__ = [
@@ -111,4 +113,5 @@ __all__ = [
     "generate_quic_traffic",
     "generate_sip_rtp_traffic",
     "generate_ipv6_nd_traffic",
+    "generate_radius_traffic",
 ]

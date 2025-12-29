@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Eliminated code duplication across scanner/attacker modules
 
 ### Changed
-- **Test Suite**: Expanded from 148 to 186 total tests
+- **Test Suite**: Expanded from 148 to 189 total tests
   - RADIUS: 24 new tests
   - NTP: 14 new tests
   - Improved test coverage and reliability

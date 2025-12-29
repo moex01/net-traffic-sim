@@ -403,7 +403,7 @@ refactor: Remove duplicate utility functions from sharepoint.py
 
 - Consolidate helper functions into base.py
 - Eliminate 593 lines of duplicate code
-- All tests still passing (148/148)
+- All tests still passing
 ```
 
 ### Good Practices
