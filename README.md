@@ -231,5 +231,27 @@ The `models.py` module provides data classes for configuration and results:
 - `duration_seconds: float` - Generation time
 - `output_file: str | None` - Path to output PCAP
 
+### Testing
+
+The project uses pytest with parallel test execution via pytest-xdist for faster test runs.
+
+**Running Tests:**
+```bash
+# Standard parallel test execution (recommended)
+pytest -n auto
+
+# Run tests with specific number of workers
+pytest -n 4
+
+# Run tests sequentially (slower)
+pytest
+```
+
+**Performance Benchmarks (148 tests):**
+- Sequential execution: 125.51s
+- 2 workers: 65.04s (1.9x speedup)
+- 4 workers: 43.82s (2.9x speedup)
+- Auto (12 workers): 35.28s (3.6x speedup)
+
 ## Docs
 Read [ARCHITECTURE.md](ARCHITECTURE.md) to understand the project structure, how the orchestrator auto-configures, why traffic is generated per protocol, how `FastPacketSerializer` buffers writes, and how parallel workers coordinate.

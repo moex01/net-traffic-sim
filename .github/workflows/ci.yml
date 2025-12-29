@@ -27,4 +27,4 @@ jobs:
           python -m ruff format --check .
       - name: Test
         run: |
-          python -m pytest -q
+          python -m pytest -q -n auto
