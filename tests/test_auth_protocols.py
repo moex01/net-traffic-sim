@@ -13,12 +13,14 @@ from scapy.layers.inet import IP, TCP, UDP
 from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 
-from net_traffic_sim.protocols.sharepoint import (
+from net_traffic_sim.protocols.auth import (
     generate_kerberos_as_rep,
     generate_kerberos_as_req,
     generate_kerberos_ldap_traffic,
     generate_ldap_bind_request,
     generate_ldap_search_request,
+)
+from net_traffic_sim.protocols.rdp import (
     generate_rdp_application_data,
     generate_rdp_session,
     generate_rdp_traffic,

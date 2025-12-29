@@ -13,11 +13,9 @@ import pytest
 from scapy.layers.inet import IP, TCP, Ether
 from scapy.packet import Raw
 
-from net_traffic_sim.protocols.sharepoint import (
-    _emit_packet,
-    _simple_tcp_exchange,
-    _udp_packet,
-    generate_ftp_traffic,
+from net_traffic_sim.protocols.base import _emit_packet, _simple_tcp_exchange, _udp_packet
+from net_traffic_sim.protocols.remote import generate_ftp_traffic
+from net_traffic_sim.protocols.smb import (
     generate_smb2_close,
     generate_smb2_create_request,
     generate_smb2_negotiate,
@@ -569,16 +567,15 @@ class TestSharepointHelpers:
         assert any(b"USER admin" in p[Raw].load for p in payload_packets), "Payload should be encoded"
 
     def test_simple_tcp_exchange_empty_payload(self):
-        """Test _simple_tcp_exchange with empty payload."""
+        """Test _simple_tcp_exchange with empty payload raises ValueError."""
         src_ip = "10.0.0.1"
         dst_ip = "10.0.0.2"
         dport = 443
         start_time = time.time()
 
-        packets = _simple_tcp_exchange(src_ip, dst_ip, dport, start_time, None, None)
-
-        # Should still have TCP handshake even with no data
-        assert len(packets) >= 3, "Should have TCP handshake"
+        # Empty payload should raise ValueError (Phase 6 validation)
+        with pytest.raises(ValueError, match="payload cannot be None or empty"):
+            _simple_tcp_exchange(src_ip, dst_ip, dport, start_time, None, None)
 
 
 class TestSMBEdgeCases:
