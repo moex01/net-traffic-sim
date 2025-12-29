@@ -2,7 +2,7 @@
 
 net-traffic-sim generates synthetic large multi-day corporate network traffic PCAPs in few minutes. The traffic is designed to look realistic for training, detection testing, and CTF-style exercises.
 
-It currently ships **34 protocol generators** including enterprise authentication (RADIUS) (see `src/net_traffic_sim/protocols/__init__.py` `PROTOCOL_REGISTRY`).
+It currently ships **35 protocol generators** including enterprise authentication (RADIUS) and time synchronization (NTP) (see `src/net_traffic_sim/protocols/__init__.py` `PROTOCOL_REGISTRY`).
 
 ## Protocol Categories
 
@@ -22,9 +22,16 @@ Protocols are organized into the following categories:
 | **Monitoring & Logging** | SNMP, SYSLOG | 2 |
 | **Security Testing** | Scanners, Targeted_Scanner | 2 |
 
-**Total: 34 protocols**
+**Total: 35 protocols**
 
 ### Recent Additions
+
+**NTP Protocol (Network Time Synchronization):**
+- NTPv4 time synchronization queries and responses
+- Background polling with realistic intervals (64-1024s)
+- NTP pool server queries (pool.ntp.org style)
+- Stratum hierarchy support (primary/secondary/tertiary)
+- RFC 5905 compliant packet structure
 
 **RADIUS Protocol (Enterprise Authentication):**
 - WiFi WPA2-Enterprise authentication flows
@@ -91,7 +98,7 @@ python -m pip install -e .
 - `--no-merge` - Skip automatic mergecap operation
 - `--keep-temps` - Keep individual protocol PCAP files after merging
 
-**Note:** The simulator generates traffic for **all 34 protocols simultaneously** to create realistic corporate network traffic patterns. Protocol selection is not supported as the design goal is comprehensive network simulation.
+**Note:** The simulator generates traffic for **all 35 protocols simultaneously** to create realistic corporate network traffic patterns. Protocol selection is not supported as the design goal is comprehensive network simulation.
 
 **Examples:**
 ```bash
@@ -257,14 +264,15 @@ pytest -n 4
 pytest
 ```
 
-**Performance Benchmarks (172 tests):**
-- Sequential execution: ~140s
-- 2 workers: ~72s (1.9x speedup)
-- 4 workers: ~48s (2.9x speedup)
-- Auto (12 workers): ~40s (3.5x speedup)
+**Performance Benchmarks (186 tests):**
+- Sequential execution: ~150s
+- 2 workers: ~77s (1.9x speedup)
+- 4 workers: ~52s (2.9x speedup)
+- Auto (12 workers): ~42s (3.6x speedup)
 
 **Test Coverage:**
-- 172 comprehensive tests covering all 34 protocols
+- 186 comprehensive tests covering all 35 protocols
+- NTP: 14 dedicated tests for time synchronization flows
 - RADIUS: 24 dedicated tests for enterprise authentication flows
 - Core protocols: 148 tests for baseline network traffic
 - All tests passing with parallel execution support

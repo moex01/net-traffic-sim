@@ -23,6 +23,7 @@ env/
 .coverage.*
 htmlcov/
 coverage.xml
+cov_annotate/
 
 # Tooling caches
 .cache/
