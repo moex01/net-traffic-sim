@@ -8,10 +8,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..serializer import FastPacketSerializer
 
-from scapy.layers.inet import IP, TCP, UDP
-from scapy.layers.inet6 import IPv6
-from scapy.layers.l2 import Ether
-from scapy.packet import Raw
 
 from ..config import (
     DOMAIN_CONTROLLER_IP,
@@ -29,9 +25,8 @@ from ..helpers import (
     generate_view_guid,
 )
 from ..logging_setup import get_logger
-from ..state import generator, get_mac_fast, random_pool
+from ..state import generator, random_pool
 from ..tcp import (
-    create_tcp_ack,
     create_tcp_psh_ack,
     exponential_delay,
     tcp_handshake,
@@ -470,130 +465,6 @@ def generate_sharepoint_outbound_software_downloads(start_time, duration, serial
         return []  # Return empty (already written)
     else:
         return all_packets  # Return for backward compatibility
-
-
-# ---
-# ADDITIONAL PROTOCOL HELPERS (imported from base.py for local use)
-# ---
-def _emit_packet(
-    serializer: FastPacketSerializer | None,
-    packets: list,
-    pkt,
-    timestamp: float,
-) -> None:
-    """Emit packet to serializer or list."""
-    if serializer is not None:
-        serializer.add_packet(pkt, timestamp)
-    else:
-        packets.append(pkt)
-
-
-def _udp_packet(
-    src_ip: str,
-    dst_ip: str,
-    sport: int,
-    dport: int,
-    payload: bytes,
-    timestamp: float,
-    dst_mac: str | None = None,
-):
-    """Create UDP IPv4 packet."""
-    if dst_mac is None:
-        dst_mac = get_mac_fast(dst_ip)
-    pkt = Ether(src=get_mac_fast(src_ip), dst=dst_mac)
-    pkt /= IP(src=src_ip, dst=dst_ip, id=random_pool.ip_id(src_ip, dst_ip))
-    pkt /= UDP(sport=sport, dport=dport)
-    if payload:
-        pkt /= Raw(load=payload)
-    pkt.time = timestamp
-    return pkt
-
-
-def _udp6_packet(
-    src_ip: str,
-    dst_ip: str,
-    sport: int,
-    dport: int,
-    payload: bytes,
-    timestamp: float,
-    dst_mac: str | None = None,
-):
-    """Create UDP IPv6 packet."""
-    if dst_mac is None:
-        dst_mac = "33:33:00:00:00:01"
-    pkt = Ether(src=get_mac_fast(src_ip), dst=dst_mac)
-    pkt /= IPv6(src=src_ip, dst=dst_ip)
-    pkt /= UDP(sport=sport, dport=dport)
-    if payload:
-        pkt /= Raw(load=payload)
-    pkt.time = timestamp
-    return pkt
-
-
-def _simple_tcp_exchange(
-    src_ip: str,
-    dst_ip: str,
-    dport: int,
-    start_time: float,
-    payload: bytes | str,
-    response_payload: bytes | str | None = None,
-):
-    packets = []
-    sport = random_pool.port()
-    handshake = tcp_handshake(src_ip, dst_ip, sport, dport, start_time)
-    packets.extend(handshake)
-
-    syn = handshake[0]
-    syn_ack = handshake[1]
-    conn_client = generator.get_connection(src_ip, dst_ip, sport, dport)
-    conn_server = generator.get_connection(dst_ip, src_ip, dport, sport)
-    conn_server.seq = syn_ack[TCP].seq + 1
-    conn_server.ack = syn[TCP].seq + 1
-    conn_server.established = True
-
-    current_time = handshake[-1].time + random_pool.delay_small()
-    if payload:
-        if isinstance(payload, str):
-            payload = payload.encode("ascii", "ignore")
-        pkt = create_tcp_psh_ack(
-            src_ip,
-            dst_ip,
-            sport,
-            dport,
-            conn_client.seq,
-            conn_client.ack,
-            65535,
-            payload,
-            current_time,
-        )
-        packets.append(pkt)
-        conn_client.seq += len(payload)
-        current_time += random_pool.delay_small()
-        ack = create_tcp_ack(dst_ip, src_ip, dport, sport, conn_server.seq, conn_client.seq, 65535, current_time)
-        packets.append(ack)
-
-    if response_payload:
-        current_time += random_pool.delay_small()
-        if isinstance(response_payload, str):
-            response_payload = response_payload.encode("ascii", "ignore")
-        resp = create_tcp_psh_ack(
-            dst_ip,
-            src_ip,
-            dport,
-            sport,
-            conn_server.seq,
-            conn_client.seq,
-            65535,
-            response_payload,
-            current_time,
-        )
-        packets.append(resp)
-        conn_server.seq += len(response_payload)
-        current_time += random_pool.delay_small()
-        ack2 = create_tcp_ack(src_ip, dst_ip, sport, dport, conn_client.seq, conn_server.seq, 65535, current_time)
-        packets.append(ack2)
-
-    return packets
 
 
 def generate_portal_outbound_software_downloads(start_time, duration, serializer: FastPacketSerializer | None = None):
