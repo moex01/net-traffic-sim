@@ -29,6 +29,7 @@ Issues = "https://github.com/moex01/net-traffic-sim/issues"
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4",
+    "pytest-xdist>=3.5.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
