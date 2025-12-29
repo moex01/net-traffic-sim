@@ -133,9 +133,7 @@ class TestSMBFileTransfer:
         filesize = 1024 * 1024  # 1 MB
         start_time = time.time()
 
-        packets = generate_smb_file_transfer(
-            src_ip, dst_ip, sport, filename, filesize, start_time, is_upload=False
-        )
+        packets = generate_smb_file_transfer(src_ip, dst_ip, sport, filename, filesize, start_time, is_upload=False)
 
         # Verify packets were generated
         assert len(packets) > 0, "No packets generated"
@@ -164,9 +162,7 @@ class TestSMBFileTransfer:
         filesize = 5 * 1024 * 1024  # 5 MB
         start_time = time.time()
 
-        packets = generate_smb_file_transfer(
-            src_ip, dst_ip, sport, filename, filesize, start_time, is_upload=True
-        )
+        packets = generate_smb_file_transfer(src_ip, dst_ip, sport, filename, filesize, start_time, is_upload=True)
 
         # Verify packets were generated
         assert len(packets) > 0, "No packets generated"
@@ -184,9 +180,7 @@ class TestSMBFileTransfer:
         filesize = 100 * 1024 * 1024  # 100 MB
         start_time = time.time()
 
-        packets = generate_smb_file_transfer(
-            src_ip, dst_ip, sport, filename, filesize, start_time, is_upload=False
-        )
+        packets = generate_smb_file_transfer(src_ip, dst_ip, sport, filename, filesize, start_time, is_upload=False)
 
         # Verify packets were generated
         assert len(packets) > 100, "Large file should generate many packets"

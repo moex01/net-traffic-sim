@@ -11,9 +11,8 @@ from scapy.packet import Raw
 from net_traffic_sim.config import Config
 from net_traffic_sim.protocols.dns import generate_dns_traffic
 
-# Note: In the actual codebase, HTTP generation might be named differently or imported from sharepoint
-# based on the investigator's report, it's often re-exported.
-from net_traffic_sim.protocols.sharepoint import generate_http_portal_traffic
+# Import from extracted http.py module instead of sharepoint.py
+from net_traffic_sim.protocols.http import generate_http_portal_traffic
 from net_traffic_sim.state import GeneratorContext
 
 
