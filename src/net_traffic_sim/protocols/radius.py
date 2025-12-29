@@ -373,6 +373,88 @@ def generate_radius_vpn_auth(
         return generate_radius_auth_success(vpn_gateway, radius_server, username, start_time, serializer)
 
 
+# Default rate: ~10 RADIUS authentications per hour (WiFi + VPN)
+RADIUS_AUTHS_PER_HOUR = 10
+
+
+def generate_radius_traffic(
+    start_time: float,
+    duration: float,
+    serializer: FastPacketSerializer | None = None,
+) -> list:
+    """Generate RADIUS authentication and accounting traffic.
+
+    Simulates enterprise RADIUS traffic including:
+    - WiFi WPA2-Enterprise authentication
+    - VPN remote access authentication
+    - Session accounting (start/stop)
+
+    Args:
+        start_time: Start timestamp for traffic generation
+        duration: Duration in seconds
+        serializer: Optional packet serializer for streaming output
+
+    Returns:
+        List of packets (or empty list if using serializer)
+    """
+    from ..config import DOMAIN_CONTROLLER_IP, USER_WORKSTATION_IPS
+
+    packets: list = []
+    current_time = start_time
+
+    # Calculate number of auth events based on duration
+    auth_events = max(1, int((duration / 3600) * RADIUS_AUTHS_PER_HOUR))
+
+    # RADIUS server is typically co-located with DC or dedicated server
+    radius_server = DOMAIN_CONTROLLER_IP
+
+    # Sample usernames for authentication
+    usernames = [
+        "jsmith@corp.local",
+        "ajonson@corp.local",
+        "mwilliams@corp.local",
+        "kbrown@corp.local",
+        "admin@corp.local",
+    ]
+
+    for i in range(auth_events):
+        # Select random client (AP or VPN gateway)
+        client_ip = random.choice(USER_WORKSTATION_IPS)
+        username = random.choice(usernames)
+
+        # Mix of authentication types
+        auth_type = random.choices(
+            ["wifi_success", "wifi_fail", "vpn", "vpn_mfa"],
+            weights=[50, 5, 30, 15],
+        )[0]
+
+        if auth_type == "wifi_success":
+            generate_radius_wifi_auth(client_ip, radius_server, username, current_time, success=True, serializer=serializer)
+        elif auth_type == "wifi_fail":
+            generate_radius_wifi_auth(client_ip, radius_server, username, current_time, success=False, serializer=serializer)
+        elif auth_type == "vpn":
+            generate_radius_vpn_auth(client_ip, radius_server, username, current_time, use_mfa=False, serializer=serializer)
+        else:  # vpn_mfa
+            generate_radius_vpn_auth(client_ip, radius_server, username, current_time, use_mfa=True, serializer=serializer)
+
+        # Add accounting for successful authentications
+        if auth_type in ["wifi_success", "vpn", "vpn_mfa"]:
+            session_id = f"session-{i:06d}"
+            # Accounting start
+            current_time += random.uniform(0.1, 0.5)
+            generate_radius_accounting(client_ip, radius_server, session_id, current_time, acct_type="start", serializer=serializer)
+
+            # Accounting stop (after session duration)
+            session_duration = random.uniform(300, 3600)  # 5 min to 1 hour
+            current_time += session_duration
+            generate_radius_accounting(client_ip, radius_server, session_id, current_time, acct_type="stop", serializer=serializer)
+
+        # Time between auth events
+        current_time += random.uniform(60, 600)  # 1-10 minutes between events
+
+    return packets if serializer is None else []
+
+
 __all__ = [
     "RADIUS_AUTH_PORT",
     "RADIUS_ACCT_PORT",
@@ -382,6 +464,7 @@ __all__ = [
     "RADIUS_ACCOUNTING_REQUEST",
     "RADIUS_ACCOUNTING_RESPONSE",
     "RADIUS_ACCESS_CHALLENGE",
+    "generate_radius_traffic",
     "generate_radius_auth_success",
     "generate_radius_auth_failure",
     "generate_radius_mfa_flow",

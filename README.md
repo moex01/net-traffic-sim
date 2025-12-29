@@ -1,12 +1,12 @@
 # Network Traffic Simulator
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Tests: 186 passing](https://img.shields.io/badge/tests-186%20passing-brightgreen.svg)](tests/)
+[![Tests: 189 passing](https://img.shields.io/badge/tests-189%20passing-brightgreen.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **net-traffic-sim** generates synthetic large-scale multi-day corporate network traffic PCAPs in a few minutes. The traffic is designed to look realistic for security training, detection system testing, and CTF-style exercises.
 
-It currently ships **35 protocol generators** including enterprise authentication (RADIUS), time synchronization (NTP), and comprehensive attack simulation capabilities.
+It currently ships **34 protocol generators** including enterprise authentication, time synchronization (NTP), and comprehensive attack simulation capabilities.
 
 ## Table of Contents
 - [Features](#features)
@@ -17,7 +17,6 @@ It currently ships **35 protocol generators** including enterprise authenticatio
 - [Examples](#examples)
 - [Configuration](#configuration)
 - [Performance & Scalability](#performance--scalability)
-- [Security Considerations](#security-considerations)
 - [Developer Guide](#developer-guide)
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
@@ -29,7 +28,7 @@ It currently ships **35 protocol generators** including enterprise authenticatio
 
 ### Key Differentiators
 - **Fast multi-core generation**: Utilizes multiprocessing for ~3.5x faster PCAP generation
-- **35 protocol generators**: Comprehensive coverage across application, network, and security layers
+- **34 protocol generators**: Comprehensive coverage across application, network, and security layers
 - **Realistic traffic patterns**: Time-aware behavior reflecting business hours vs. off-hours activity
 - **Attack simulation**: Includes scanner reconnaissance and targeted attack traffic
 - **CTF-ready**: Designed for security training, blue team exercises, and CTF challenge creation
@@ -59,24 +58,7 @@ It currently ships **35 protocol generators** including enterprise authenticatio
 | **Monitoring & Logging** | SNMP, SYSLOG | 2 | RFC 3411 (SNMP), RFC 5424 (Syslog) |
 | **Security Testing** | Scanners, Targeted_Scanner | 2 | Attack simulation |
 
-**Total: 35 protocols**
-
-### Recent Additions
-
-**NTP Protocol (Network Time Synchronization):**
-- NTPv4 time synchronization queries and responses
-- Background polling with realistic intervals (64-1024s)
-- NTP pool server queries (pool.ntp.org style)
-- Stratum hierarchy support (primary/secondary/tertiary)
-- [RFC 5905](https://datatracker.ietf.org/doc/html/rfc5905) compliant packet structure
-
-**RADIUS Protocol (Enterprise Authentication):**
-- WiFi WPA2-Enterprise authentication flows
-- VPN remote access authentication
-- Multi-factor authentication (MFA) support
-- Accounting (start/stop/interim-update)
-- Challenge-Response authentication
-- Access-Accept/Access-Reject flows
+**Total: 34 protocols**
 
 ## Quick Start
 
@@ -98,7 +80,7 @@ mergecap -w final_output.pcap temp_pcaps/*.pcap
 **Expected output:**
 - Individual protocol PCAPs in `temp_pcaps/` directory
 - Merged `final_output.pcap` containing all traffic sorted by timestamp
-- ~50 MB total PCAP size with traffic from all 35 protocols
+- ~50 MB total PCAP size with traffic from all 34 protocols
 
 **Verify:**
 ```bash
@@ -161,7 +143,7 @@ mergecap -v
 - `--no-merge` - Skip automatic mergecap operation
 - `--keep-temps` - Keep individual protocol PCAP files after merging
 
-**Important:** The simulator generates traffic for all 35 protocols simultaneously to create realistic corporate network traffic patterns. This design ensures comprehensive network simulation that mirrors real enterprise environments.
+**Important:** The simulator generates traffic for all 34 protocols simultaneously to create realistic corporate network traffic patterns. This design ensures comprehensive network simulation that mirrors real enterprise environments.
 
 ### Basic Commands
 
@@ -266,7 +248,7 @@ net-traffic-sim uses Python's multiprocessing to generate traffic in parallel:
 
 Test results on modern hardware (Apple M1/M2, 8-12 cores):
 
-**Test Suite Performance (186 tests):**
+**Test Suite Performance (189 tests):**
 - Sequential execution: ~150s
 - 2 workers: ~77s (1.9x speedup)
 - 4 workers: ~52s (2.9x speedup)
@@ -301,44 +283,6 @@ Test results on modern hardware (Apple M1/M2, 8-12 cores):
 
 For architectural details, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## Security Considerations
-
-⚠️ **Important**: This tool generates realistic network traffic, including simulated attack patterns.
-
-### Legal and Ethical Use
-
-- **Only use in isolated test environments** (home labs, CTF infrastructure, authorized testing networks)
-- **Never run against production networks** without explicit written authorization
-- Generated scanner/attacker traffic may trigger IDS/IPS systems and security alerts
-- Be aware of legal implications in your jurisdiction regarding traffic generation and security testing
-
-### This Tool is Designed For:
-
-✅ Security training and education
-✅ CTF challenge creation
-✅ Network monitoring system testing (SIEM, IDS/IPS)
-✅ Blue team defensive exercises
-✅ Research purposes in controlled environments
-✅ Protocol analysis and forensics training
-
-### This Tool is NOT For:
-
-❌ Unauthorized network testing
-❌ Production network traffic generation
-❌ Malicious scanning or reconnaissance
-❌ Circumventing security controls
-❌ Any illegal or unethical activities
-
-### Attack Traffic Included
-
-The simulator includes realistic attack simulation traffic:
-- Port scanning and service enumeration
-- LDAP reconnaissance
-- Exploit attempts (simulated, non-functional)
-- Brute force authentication attempts (simulated)
-
-This traffic is intended for **defensive training only**. Ensure your test environment is properly isolated.
-
 ## Developer Guide
 
 ### Adding New Protocols
@@ -366,7 +310,7 @@ To add a new protocol to the simulator:
    - Update test count in README.md
    - Add architectural notes to ARCHITECTURE.md if needed
 
-For detailed API documentation, see the [BaseProtocol API](#baseprotocol-abstract-class) section below.
+For detailed API documentation, see the [BaseProtocol Abstract Class](#baseprotocol-abstract-class) section below.
 
 ### BaseProtocol Abstract Class
 
@@ -472,18 +416,11 @@ pytest --cov=src/net_traffic_sim --cov-report=html
 
 ### Test Coverage
 
-- **186 comprehensive tests** covering all 35 protocols
+- **189 comprehensive tests** covering all 34 protocols
 - **NTP**: 14 dedicated tests for time synchronization flows
 - **RADIUS**: 24 dedicated tests for enterprise authentication flows
-- **Core protocols**: 148 tests for baseline network traffic
+- **Core protocols**: 151 tests for baseline network traffic
 - All tests passing with parallel execution support
-
-### Performance Benchmarks (186 tests)
-
-- Sequential execution: ~150s
-- 2 workers: ~77s (1.9x speedup)
-- 4 workers: ~52s (2.9x speedup)
-- Auto (12 workers): ~42s (3.6x speedup)
 
 ## Troubleshooting
 
