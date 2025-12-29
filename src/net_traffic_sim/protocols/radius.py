@@ -429,25 +429,25 @@ def generate_radius_traffic(
         )[0]
 
         if auth_type == "wifi_success":
-            generate_radius_wifi_auth(client_ip, radius_server, username, current_time, success=True, serializer=serializer)
+            packets.extend(generate_radius_wifi_auth(client_ip, radius_server, username, current_time, success=True, serializer=serializer))
         elif auth_type == "wifi_fail":
-            generate_radius_wifi_auth(client_ip, radius_server, username, current_time, success=False, serializer=serializer)
+            packets.extend(generate_radius_wifi_auth(client_ip, radius_server, username, current_time, success=False, serializer=serializer))
         elif auth_type == "vpn":
-            generate_radius_vpn_auth(client_ip, radius_server, username, current_time, use_mfa=False, serializer=serializer)
+            packets.extend(generate_radius_vpn_auth(client_ip, radius_server, username, current_time, use_mfa=False, serializer=serializer))
         else:  # vpn_mfa
-            generate_radius_vpn_auth(client_ip, radius_server, username, current_time, use_mfa=True, serializer=serializer)
+            packets.extend(generate_radius_vpn_auth(client_ip, radius_server, username, current_time, use_mfa=True, serializer=serializer))
 
         # Add accounting for successful authentications
         if auth_type in ["wifi_success", "vpn", "vpn_mfa"]:
             session_id = f"session-{i:06d}"
             # Accounting start
             current_time += random.uniform(0.1, 0.5)
-            generate_radius_accounting(client_ip, radius_server, session_id, current_time, acct_type="start", serializer=serializer)
+            packets.extend(generate_radius_accounting(client_ip, radius_server, session_id, current_time, acct_type="start", serializer=serializer))
 
             # Accounting stop (after session duration)
             session_duration = random.uniform(300, 3600)  # 5 min to 1 hour
             current_time += session_duration
-            generate_radius_accounting(client_ip, radius_server, session_id, current_time, acct_type="stop", serializer=serializer)
+            packets.extend(generate_radius_accounting(client_ip, radius_server, session_id, current_time, acct_type="stop", serializer=serializer))
 
         # Time between auth events
         current_time += random.uniform(60, 600)  # 1-10 minutes between events
