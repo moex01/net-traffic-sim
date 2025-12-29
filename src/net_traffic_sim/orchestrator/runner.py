@@ -18,22 +18,31 @@ def _init_worker_context(config: Config) -> None:
     set_default_context(GeneratorContext(config, seed=config.seed))
 
 
-def get_unique_output_dir(base_dir="temp_pcaps"):
+def get_unique_output_dir(base_dir="temp_pcaps", max_attempts=10000):
     """
     Get unique output directory. If temp_pcaps exists, try temp_pcaps1, temp_pcaps2, etc.
     Returns: (directory_path, run_number)
+
+    Args:
+        base_dir: Base directory name
+        max_attempts: Maximum number of directory creation attempts (default: 10000)
+
+    Raises:
+        RuntimeError: If unable to create unique directory after max_attempts
     """
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
         return base_dir, 1
 
     counter = 1
-    while True:
+    while counter <= max_attempts:
         new_dir = f"{base_dir}{counter}"
         if not os.path.exists(new_dir):
             os.makedirs(new_dir)
             return new_dir, counter
         counter += 1
+
+    raise RuntimeError(f"Failed to create unique output directory after {max_attempts} attempts. Base directory: {base_dir}")
 
 
 def generate_all_traffic_fast(
