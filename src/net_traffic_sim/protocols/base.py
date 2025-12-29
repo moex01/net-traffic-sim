@@ -7,7 +7,9 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    pass
+    from scapy.packet import Packet
+
+    from ..serializer import FastPacketSerializer
 
 from scapy.layers.inet import IP, TCP, UDP
 from scapy.layers.inet6 import IPv6
@@ -18,7 +20,12 @@ from ..state import generator, get_mac_fast, random_pool
 from ..tcp import create_tcp_ack, create_tcp_psh_ack, tcp_fin_handshake, tcp_handshake
 
 
-def _emit_packet(serializer, packets, pkt, timestamp):
+def _emit_packet(
+    serializer: FastPacketSerializer | None,
+    packets: list[Packet],
+    pkt: Packet,
+    timestamp: float,
+) -> None:
     """Emit a packet either to the serializer or to a packets list."""
     if serializer is not None:
         serializer.add_packet(pkt, timestamp)
@@ -26,7 +33,15 @@ def _emit_packet(serializer, packets, pkt, timestamp):
         packets.append(pkt)
 
 
-def _udp_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None):
+def _udp_packet(
+    src_ip: str,
+    dst_ip: str,
+    sport: int,
+    dport: int,
+    payload: bytes,
+    timestamp: float,
+    dst_mac: str | None = None,
+) -> Packet:
     """Create a UDP/IPv4 packet."""
     if dst_mac is None:
         dst_mac = get_mac_fast(dst_ip)
@@ -39,7 +54,15 @@ def _udp_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None):
     return pkt
 
 
-def _udp6_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None):
+def _udp6_packet(
+    src_ip: str,
+    dst_ip: str,
+    sport: int,
+    dport: int,
+    payload: bytes,
+    timestamp: float,
+    dst_mac: str | None = None,
+) -> Packet:
     """Create a UDP/IPv6 packet."""
     if dst_mac is None:
         dst_mac = "33:33:00:00:00:01"
@@ -52,7 +75,14 @@ def _udp6_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None)
     return pkt
 
 
-def _simple_tcp_exchange(src_ip, dst_ip, dport, start_time, payload, response_payload=None):
+def _simple_tcp_exchange(
+    src_ip: str,
+    dst_ip: str,
+    dport: int,
+    start_time: float,
+    payload: bytes | str,
+    response_payload: bytes | str | None = None,
+) -> list[Packet]:
     """Create a simple TCP exchange with handshake, data, and optional response.
 
     Args:
@@ -128,7 +158,15 @@ def _simple_tcp_exchange(src_ip, dst_ip, dport, start_time, payload, response_pa
     return packets
 
 
-def add_tcp_keepalive(src_ip, dst_ip, sport, dport, seq, ack, timestamp):
+def add_tcp_keepalive(
+    src_ip: str,
+    dst_ip: str,
+    sport: int,
+    dport: int,
+    seq: int,
+    ack: int,
+    timestamp: float,
+) -> Packet:
     """Generate TCP Keep-Alive packet (1 byte before current seq)."""
     pkt = Ether(
         src=generator.mac_table.get(src_ip, "00:00:00:00:00:01"),

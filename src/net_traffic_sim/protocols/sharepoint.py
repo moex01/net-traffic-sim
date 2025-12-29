@@ -1063,14 +1063,29 @@ def generate_public_scanner_traffic(start_time, duration, serializer: FastPacket
 # ---
 # ADDITIONAL PROTOCOL HELPERS (imported from base.py for local use)
 # ---
-def _emit_packet(serializer, packets, pkt, timestamp):
+def _emit_packet(
+    serializer: FastPacketSerializer | None,
+    packets: list,
+    pkt,
+    timestamp: float,
+) -> None:
+    """Emit packet to serializer or list."""
     if serializer is not None:
         serializer.add_packet(pkt, timestamp)
     else:
         packets.append(pkt)
 
 
-def _udp_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None):
+def _udp_packet(
+    src_ip: str,
+    dst_ip: str,
+    sport: int,
+    dport: int,
+    payload: bytes,
+    timestamp: float,
+    dst_mac: str | None = None,
+):
+    """Create UDP IPv4 packet."""
     if dst_mac is None:
         dst_mac = get_mac_fast(dst_ip)
     pkt = Ether(src=get_mac_fast(src_ip), dst=dst_mac)
@@ -1082,7 +1097,16 @@ def _udp_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None):
     return pkt
 
 
-def _udp6_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None):
+def _udp6_packet(
+    src_ip: str,
+    dst_ip: str,
+    sport: int,
+    dport: int,
+    payload: bytes,
+    timestamp: float,
+    dst_mac: str | None = None,
+):
+    """Create UDP IPv6 packet."""
     if dst_mac is None:
         dst_mac = "33:33:00:00:00:01"
     pkt = Ether(src=get_mac_fast(src_ip), dst=dst_mac)
@@ -1094,7 +1118,14 @@ def _udp6_packet(src_ip, dst_ip, sport, dport, payload, timestamp, dst_mac=None)
     return pkt
 
 
-def _simple_tcp_exchange(src_ip, dst_ip, dport, start_time, payload, response_payload=None):
+def _simple_tcp_exchange(
+    src_ip: str,
+    dst_ip: str,
+    dport: int,
+    start_time: float,
+    payload: bytes | str,
+    response_payload: bytes | str | None = None,
+):
     packets = []
     sport = random_pool.port()
     handshake = tcp_handshake(src_ip, dst_ip, sport, dport, start_time)
