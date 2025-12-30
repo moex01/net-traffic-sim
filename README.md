@@ -1,7 +1,7 @@
 # Network Traffic Simulator
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Tests: 189 passing](https://img.shields.io/badge/tests-189%20passing-brightgreen.svg)](tests/)
+[![Tests: 186 passing](https://img.shields.io/badge/tests-186%20passing-brightgreen.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **net-traffic-sim** generates synthetic large-scale multi-day corporate network traffic PCAPs in a few minutes. The traffic is designed to look realistic for security training, detection system testing, and CTF-style exercises.
@@ -248,7 +248,7 @@ net-traffic-sim uses Python's multiprocessing to generate traffic in parallel:
 
 Test results on modern hardware (Apple M1/M2, 8-12 cores):
 
-**Test Suite Performance (189 tests):**
+**Test Suite Performance (186 tests):**
 - Sequential execution: ~150s
 - 2 workers: ~77s (1.9x speedup)
 - 4 workers: ~52s (2.9x speedup)
@@ -416,10 +416,10 @@ pytest --cov=src/net_traffic_sim --cov-report=html
 
 ### Test Coverage
 
-- **189 comprehensive tests** covering all 34 protocols
+- **186 comprehensive tests** covering all 34 protocols
 - **NTP**: 14 dedicated tests for time synchronization flows
 - **RADIUS**: 24 dedicated tests for enterprise authentication flows
-- **Core protocols**: 151 tests for baseline network traffic
+- **Core protocols**: 148 tests for baseline network traffic
 - All tests passing with parallel execution support
 
 ## Troubleshooting

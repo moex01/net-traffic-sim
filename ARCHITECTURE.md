@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-**Last Updated**: 2024-12-29
+**Last Updated**: 2025-12-30
 **Version**: 0.1.0
 **Status**: Current
 
@@ -216,7 +216,7 @@ This produces a single PCAP with all traffic sorted by timestamp, suitable for a
 - **Auto workers** (CPU core count): ~3-4x faster than single worker
 - **Custom workers**: Scales linearly up to core count, then plateaus
 
-**Test Suite Performance (189 tests)**:
+**Test Suite Performance (186 tests)**:
 - Sequential: ~150s
 - 2 workers: ~77s (1.9x speedup)
 - 4 workers: ~52s (2.9x speedup)

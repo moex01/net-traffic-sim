@@ -7,14 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Comprehensive documentation overhaul
-  - Professional README with badges and clear structure
-  - ARCHITECTURE.md with detailed internals documentation
-  - CONTRIBUTING.md with development guidelines
-  - This CHANGELOG for tracking changes
+### Fixed
+- RADIUS packet accumulation when serializer is None
+  - Ensure RADIUS packets are properly accumulated before returning
+  - Prevents packet loss in non-serializer mode
 
-## [0.1.0] - 2024-12-29
+### Changed
+- Updated all documentation dates from 2024 to 2025
+- Corrected test count to 186 (verified via pytest collection)
+- Verified protocol count accuracy (34 protocols)
+
+## [0.1.0] - 2025-12-29
 
 ### Added
 - **NTP Protocol**: Network Time Protocol (NTPv4) simulation
@@ -43,12 +46,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Eliminated code duplication across scanner/attacker modules
 
 ### Changed
-- **Test Suite**: Expanded from 148 to 189 total tests
+- **Test Suite**: Expanded from 148 to 186 total tests
   - RADIUS: 24 new tests
   - NTP: 14 new tests
   - Improved test coverage and reliability
 
-- **Documentation**: Updated protocol count to 35 supported protocols
+- **Documentation**: Updated protocol count to 34 supported protocols
 
 ### Maintenance
 - Added `cov_annotate/` to .gitignore to prevent coverage artifacts in version control
